@@ -67,42 +67,62 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // Constant file path
     private final String FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 
-    // Buttons to record audio
+    // Buttons to record audio and play the translation
     private Button startButton;
     private Button stopButton;
     private Button playButton;
-    private TextView transcribeText;
+    
+    // TextView for translated text
+    private TextView translationText;
+    // Input text for people who don't want to speak to Loomo
     private EditText inputToTranslate;
+
+    // Selector for target language to translate to
     private Spinner spinner;
+
+    // Holds target language
     private String target;
+
+    // Holds either the typed or spoken text
     private String originalText;
+
+    // Holds translated text to be displayed in TextView
     private String translatedText;
+
+    // If the internet is connected then True
     private boolean connected;
 
-    // Segway Loomo items needed to get raw data
+    // Segway Loomo objects needed to get raw data
     private RawDataListener mRawDataListener;
     private Recognizer mRecognizer;
     private ServiceBinder.BindStateListener mRecognitionBindStateListener;
 
-    File file;
+    // Holds raw audio
+    private File file;
 
-    GoogleCredentials myCredentials;
-    FixedCredentialsProvider credentialsProvider;
-    SpeechSettings speechSettings;
+    // Authentication classes to use Google Cloud API for translation and speech to text
+    private GoogleCredentials myCredentials;
+    private FixedCredentialsProvider credentialsProvider;
 
-    Translate translate;
+    // Used to perform speech to text
+    private SpeechSettings speechSettings;
 
+    // Used to perform translation
+    private Translate translate;
+
+
+    // Writes raw audio bytes to file
     public void writeByte(byte[] data) {
         try {
             OutputStream os = new FileOutputStream(file, true);
             os.write(data);
             os.close();
-            System.out.println("Successfully wrote byte.");
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    // Clears file contents
     public void clearFile() {
         try{
             OutputStream os = new FileOutputStream(file);
@@ -112,11 +132,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    // Returns the raw audio bytes from the raw audio file
+    public static byte[] getAudioBytes(InputStream inputStream){
+        byte[] bytes = new byte[0];
+        try {
+            bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
+    }
+
+    // Initializes Google Cloud API speech to text services
     public void getSpeechService() {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        // R.raw.loomocapstone is the json key you get from the Google Cloud API Account
+        // Put the json key in the /res/raw folder
         try (InputStream is = getResources().openRawResource(R.raw.loomocapstone)) {
 
             //Get credentials:
@@ -130,11 +165,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    // Initializes Google Cloud API Translation services
     public void getTranslateService() {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        // R.raw.loomocapstone is the json key you get from the Google Cloud API Account
+        // Put the json key in the /res/raw folder
         try (InputStream is = getResources().openRawResource(R.raw.loomocapstone)) {
 
             //Get credentials:
@@ -156,33 +194,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        transcribeText = findViewById(R.id.textView);
+        // Initialize screen entities
+        translationText = findViewById(R.id.textView);
         inputToTranslate = findViewById(R.id.inputToTranslate);
-
-        Spinner spinner = findViewById(R.id.Spinner1);
+        spinner = findViewById(R.id.Spinner1);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.numbers, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+        // Initialize raw audio file
         file = new File(FILE_PATH + "audio.raw");
 
+        // Initialize speech to text service
         getSpeechService();
 
-        // Init loomo recognizer
+        // Initialize translation service
+        getTranslateService();
+
+        // Initialize Loomo recognizer
         mRecognizer = Recognizer.getInstance();
 
         // Enable beam forming allows raw audio to be recorded
         /*
+        This isn't needed but is commented in case needed for future project developments
         try {
             mRecognizer.beamForming(true);
         } catch (VoiceException e) {
             e.printStackTrace();
         }
-
          */
 
-        // Init buttons and listeners
+        // Initialize buttons and listeners
         initButtons();
         initListeners();
 
@@ -196,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         startButton = (Button) findViewById(R.id.start_button);
         stopButton = (Button) findViewById(R.id.stop_button);
         stopButton.setEnabled(false);
-
         playButton = (Button) findViewById(R.id.play);
 
         // Handlers buttons clicks
@@ -225,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mRawDataListener = new RawDataListener() {
             @Override
             public void onRawData(byte[] data, int dataLength) {
+                // Writes the raw audio to file
                 writeByte(data);
             }
         };
@@ -232,28 +275,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // Button handlers
     public void onClick(View view) {
+        // Start Button Push
         if (view.getId() == R.id.start_button) {
+            // Ensures only one speech at a time gets recorded
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
+
+            // Clears file contents to remove last translation
             clearFile();
+
+            // Begins recording
             try {
                 mRecognizer.startBeamFormingListen(mRawDataListener);
             } catch (VoiceException e) {
                 e.printStackTrace();
             }
-        } else if (view.getId() == R.id.stop_button) {
+        }
+        // Stop Button Push
+        else if (view.getId() == R.id.stop_button) {
+            //Ensures only one speech at a time gets recorded
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
+
+            // Stops recording
             try {
                 mRecognizer.stopBeamFormingListen();
             } catch (VoiceException e) {
                 e.printStackTrace();
             }
-        } else if (view.getId() == R.id.play){
+        }
+        // Translates
+        else if (view.getId() == R.id.play){
 
             try {
+                // Gets raw audio file contents
                 InputStream inputStream = new FileInputStream(file);
-                System.out.println(file.getName());
+
+                // Performs speech to text and translates
                 sampleRecognize(inputStream);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -261,17 +319,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         }
-    }
-
-    public static byte[] getAudioBytes(InputStream inputStream){
-        byte[] bytes = new byte[0];
-        try {
-            bytes = new byte[inputStream.available()];
-            inputStream.read(bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bytes;
     }
 
     /**
@@ -318,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
 
                     //If not, display "no connection" warning:
-                    transcribeText.setText(getResources().getString(R.string.no_connection));
+                    translationText.setText(getResources().getString(R.string.no_connection));
                 }
             }
         } catch (Exception exception) {
@@ -326,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    // Performs translation on given text
     public void translate(String text) {
         //Get input text to be translated:
         if(text == "" || text == null) {
@@ -336,9 +384,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         translatedText = translation.getTranslatedText();
 
         //Translated text and original text are set to TextViews:
-        transcribeText.setText(translatedText);
+        translationText.setText(translatedText);
     }
 
+    // Checks for internet connection to use Google Cloud APIs
     public boolean checkInternetConnection() {
 
         //Check internet connection:
@@ -351,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return connected;
     }
 
+    // Sets target language from the spinner drop-down
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
             /* This is to make the selection appear for a couple seconds at the bottom of the screen
