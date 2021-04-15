@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "loomocapstone",
+  "private_key_id": "9580a70b28de451edef2687ecd4e38cb8afe0807",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCP2TlucP7FLfSB\nm6fthQCZxlmcFlza3fkDsfXoM6VA2AtWdla9C4kl7y/RuPtKmR26IEAYkzZ3tqG8\nFESjijNg4LAGtQiqH5SwWvkute6clf6Qb4keuEAKVz/Hdf0yclYpNiu+qNAJnsLm\nvn1cPw7K/rvT+AvpzUU8gN+sy+O2GuFqNe/ry/LPwGHZWVchO2DMsbkA37FMJbwA\nBbnc8tjD8kXbB44VxQ6JgG8pbJLN7T5lklxuQMYvZlAeX2+nh/cBLcY+7sxsu4Nz\nG2/kncyE/wWy/tFG3Y5gtBPQGyZiy+807ttPjGi6SgdqTSKrWSLxMTAN4nk8Syrp\nc0ozAXzDAgMBAAECggEAF3wL48t/1JpFlllex6jUqcZXv+NownTF4EQQFRpFavo6\nk6GbVJ7LA83yfSdZo1qvH0F/pWN3W4EOE6IteJOqArF8G4Q3x2qDgG1BzE34iEj2\nuAb1mHXVQrru1zYcob1H8s98wdJWsJNiV4CW/9XtqNeAu8D91Oxl1tRlcBUTdpnb\nNEL6z811N202WDqTulOQgvTQZm+U9ntE5b1Xz1DK7FfUrltd8t9q6O7f17wC06ir\nP9O6Oigz43IrviB/iEF2PR4qwHj76y+VnrGBtIWHj7xeC1BRiXty85hJCs4VtEhX\nHWgTUMfrL/byx8j9SATWe5r+dchUvFw43JTcGMLQ/QKBgQDCVN4lzN+671P2N/1d\nFBMuB1yhsTUABVtOZCPmKOuc8fzkQRyNbYyPh+c54qS1ndRj2D7OCfHjgiiwT3PQ\nVelEvkfgh6S0O4l2JMhukxEJ6hoctCXqMAqlDXdTha+k2H6T/QWznRgo4GKZEvKd\nIKnMPF5q4K+aHcw9guaAPyzYXQKBgQC9fzZvN8OH8u6oM4b5NE41jsjThZjhudK1\npqSrhu/EptZP83khNxN/zKSEx/l8Xacoa6N+LCqo7UpG2t2oUi6sXI+xnO3NG3JG\nYziLh0hmjdUELvdpkHc9O9sIWs50Bmg3Uq4HGdKCDuXMVI9KJPWM79B1stUXfzsm\nkLoQsyXXnwKBgQCZqFlvMivFt+9/xI3Fx1XTE2cfQutRdOrZdT0dhEWo936rTQCy\no2h9JUyj7J2oLX/+4sHmUN6+sfBSWMCOfx/Ph1V2KEsHZ/wtOrBxHkBewoibIabJ\nIeuIzrkHhbF4eua7RVn4x8KOr73Go8DKlUUthJ5zi+3Nwrn3+UUhKtLe0QKBgQCM\nNw4jO2LePF5lbUMpMI/SR2XIRel61NHaAYWFOiI+I6kenax6bFNsVBNEAOhVIsMm\nQIdIPAwQ1QwJ47bx7mWEujTFGrZG91EWTiKv85kZ8Ua2gr4liXUBhUGsK+zpozgH\n/5CvxmaiP72/9K3WEgTzlRtti7brXQR6o8pZwwV0RwKBgQC1pxDVc5vPQ3dYvL+a\npMF4I1TyUtFuTkIsnyVGtW3IfCUXbq8a281YmURCVgCZSgroLTGDx7CWs6arpMJh\nmVXodLgsjZ/ComhqDlYfxXpD+TNWMcYn3zx6aVzw9hJJukKVHEYdfWnPEd8KP4JR\n4aJYNflZiF3G6gvNpEC+Y3Go5w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "loomocapstone@loomocapstone.iam.gserviceaccount.com",
+  "client_id": "116860429282256756512",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/loomocapstone%40loomocapstone.iam.gserviceaccount.com"
+}

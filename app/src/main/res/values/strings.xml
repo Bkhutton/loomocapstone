@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">RawVoice</string>
+    <string-array name="numbers">
+        <item>Select Item</item>
+        <item>Spanish</item>
+        <item>English</item>
+        <item>Italian</item>
+        <item>French</item>
+        <item>German</item>
+    </string-array>
+
+    <string name="no_connection">No internet connection! Cannot be translated!</string>
+</resources>
