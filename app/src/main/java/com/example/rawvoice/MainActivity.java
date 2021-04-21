@@ -1,6 +1,7 @@
 package com.example.rawvoice;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -309,10 +310,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             try {
                 // Gets raw audio file contents
+                System.out.println(inputToTranslate.getText().toString());
+                if(inputToTranslate.getText().toString().equals("")) {
                 InputStream inputStream = new FileInputStream(file);
 
                 // Performs speech to text and translates
-                sampleRecognize(inputStream);
+                sampleRecognize(inputStream); }
+                else {
+                    translate("");
+                }
+                spinner.setSelection(0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -379,12 +386,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if(text == "" || text == null) {
             originalText = inputToTranslate.getText().toString();
         }
-        originalText = text;
+        else {
+            originalText = text;
+        }
         Translation translation = translate.translate(originalText, Translate.TranslateOption.targetLanguage(target), Translate.TranslateOption.model("base"));
         translatedText = translation.getTranslatedText();
 
         //Translated text and original text are set to TextViews:
         translationText.setText(translatedText);
+        inputToTranslate.setText("");
     }
 
     // Checks for internet connection to use Google Cloud APIs
@@ -403,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // Sets target language from the spinner drop-down
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
+        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
             /* This is to make the selection appear for a couple seconds at the bottom of the screen
         Toast.makeText(parent.getContext(),text, Toast.LENGTH_SHORT).show();
             */
